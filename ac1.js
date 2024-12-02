@@ -22,3 +22,19 @@ for (let i = 0; i < arr1.length; i++) {
 }
 
 console.log('Total distance: ', totalDistance);
+
+let firstNumber = 20144;
+let firstNumSum = arr2.reduce(getSum, 0);
+console.log('First num sum', firstNumSum);
+
+function getSum(total, num) {
+    num = num * 1;
+
+    if (num === firstNumber) {
+        console.log('First number', firstNumber);
+        console.log('num ', num);
+        total++;
+        console.log('Total accumulation: ', total);
+    }
+    return total;
+}
