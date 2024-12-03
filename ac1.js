@@ -1,40 +1,30 @@
 const fs = require('fs');
 const data = fs.readFileSync('./input1.txt', 'utf-8');
 
-const splitData = data.split('\r\n');
-
+const splitData = data.split('\n');
 let arr1 = [];
 let arr2 = [];
 
 splitData.forEach((str) => {
-    let rowArr = str.split('   ');
-    arr1.push(rowArr[0]);
-    arr2.push(rowArr[1]);
+    const rowArr = str.split('   ');
+    arr1.push(rowArr[0] * 1);
+    arr2.push(rowArr[1] * 1);
 });
 
 arr1.sort((a, b) => a - b);
 arr2.sort((a, b) => a - b);
 
 let totalDistance = 0;
+let similarityScore = 0;
 for (let i = 0; i < arr1.length; i++) {
-    let distance = Math.abs(arr1[i] - arr2[i]);
+    const distance = Math.abs(arr1[i] - arr2[i]);
     totalDistance += distance;
+
+    const currentNum = arr1[i];
+    const getSum = (total, num) => { if (num === currentNum) total++; return total; };
+    const rowTotal = arr2.reduce(getSum, 0) * currentNum;
+    similarityScore += rowTotal;
 }
 
-console.log('Total distance: ', totalDistance);
-
-let firstNumber = 20144;
-let firstNumSum = arr2.reduce(getSum, 0);
-console.log('First num sum', firstNumSum);
-
-function getSum(total, num) {
-    num = num * 1;
-
-    if (num === firstNumber) {
-        console.log('First number', firstNumber);
-        console.log('num ', num);
-        total++;
-        console.log('Total accumulation: ', total);
-    }
-    return total;
-}
+console.log('Part 1 Answer: ', totalDistance);
+console.log('Part 2 Answer: ', similarityScore);
