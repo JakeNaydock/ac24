@@ -17,18 +17,25 @@ for (let i = 0; i < arrLines.length; i++) {
         if (!previousNum) continue;
         direction = (currentNum < previousNum) ? 'decreasing' : 'increasing';
         let intSafe = safetyCheck(currentNum, previousNum, direction, previousDirection);
+        //console.log(`Index ${j} / Int Safe?: ${intSafe} Current num: ${currentNum}, Previous Num: ${previousNum}, Direction: ${direction}, Previous Direction: ${previousDirection}`);
         let safeAfterRemoval;
         if (!intSafe) {
             safeAfterRemoval = safetyCheck(nextNum, previousNum, direction, previousDirection, true);
             if (!safeAfterRemoval) break;
+            arrCurLine.splice(j, 1);
+            console.log(`Line ${i + 1} of text document, number ${j + 1} (${currentNum}) is safe after removal`);
+            j = j - 1;
+            console.log('New j value before continuing loop: ', j);
+            continue;
         }
-        if (safeAfterRemoval) console.log(`Line ${i + 1} of text document, number ${j + 1} (${currentNum}) is safe after removal`);
-        if (j === arrCurLine.length - 1) safeRowCount++;
-        if (safeAfterRemoval) {
-            console.log(`Line ${i + 1} of text document is safe, and contains a removal`);
-
+        //!arrCurLine[j + 1]
+        //j === arrCurLine.length - 1
+        if (!arrCurLine[j + 1]) {
+            safeRowCount++;
+            if (safeAfterRemoval) {
+                console.log(`Line ${i + 1} of text document is safe, and contains a removal. Index ${j}`);
+            }
         }
-
 
         previousDirection = direction;
     }
@@ -37,7 +44,7 @@ for (let i = 0; i < arrLines.length; i++) {
 console.log('Part 2 Answer:', safeRowCount);
 
 function safetyCheck(currentNum, previousNum, direction, previousDirection, debug) {
-    if (debug) console.log(`Current (or next) num: ${currentNum}, Previous Num: ${previousNum}, Direction: ${direction}, Previous Direction: ${previousDirection}`);
+    //if (debug) console.log(`Current (or next) num: ${currentNum}, Previous Num: ${previousNum}, Direction: ${direction}, Previous Direction: ${previousDirection}`);
 
     if (!previousNum) return 1;
     if (currentNum === previousNum) return 0;
