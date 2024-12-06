@@ -1,5 +1,5 @@
 const fs = require('fs');
-const data = fs.readFileSync('./input2.txt', 'utf-8');
+const data = fs.readFileSync('./input2min.txt', 'utf-8');
 const arrLines = data.split('\n');
 //console.log('Arrlines', arrLines);
 let safeRowCount = 0;
@@ -8,31 +8,34 @@ for (let i = 0; i < arrLines.length; i++) {
     let previousDirection;
     let direction;
 
-
+    let lineContainsRemoval = false;
     for (let j = 0; j < arrCurLine.length; j++) {
         const currentNum = arrCurLine[j] * 1;
-        const previousNum = (j > 0) ? arrCurLine[j - 1] * 1 : null;
-        let nextNum = (j < arrCurLine.length - 1) ? arrCurLine[j + 1] : null;
+        const previousNum = arrCurLine[j - 1];
+        let nextNum = arrCurLine[j + 1];
+        //console.log('Next num', nextNum);
         //console.log('Next num', nextNum);
         if (!previousNum) continue;
         direction = (currentNum < previousNum) ? 'decreasing' : 'increasing';
         let intSafe = safetyCheck(currentNum, previousNum, direction, previousDirection);
-        //console.log(`Index ${j} / Int Safe?: ${intSafe} Current num: ${currentNum}, Previous Num: ${previousNum}, Direction: ${direction}, Previous Direction: ${previousDirection}`);
+        console.log(`Index ${j} / Int Safe?: ${intSafe} Current num: ${currentNum}, Previous Num: ${previousNum}, Direction: ${direction}, Previous Direction: ${previousDirection}`);
         let safeAfterRemoval;
         if (!intSafe) {
             safeAfterRemoval = safetyCheck(nextNum, previousNum, direction, previousDirection, true);
+            console.log(`Safe after removal? ${safeAfterRemoval} (Index ${j} / Current num: ${currentNum})`);
             if (!safeAfterRemoval) break;
+            lineContainsRemoval = true;
             arrCurLine.splice(j, 1);
             console.log(`Line ${i + 1} of text document, number ${j + 1} (${currentNum}) is safe after removal`);
-            j = j - 1;
+            //j = j - 1;
             console.log('New j value before continuing loop: ', j);
-            continue;
         }
         //!arrCurLine[j + 1]
         //j === arrCurLine.length - 1
-        if (!arrCurLine[j + 1]) {
+        if (!nextNum) {
             safeRowCount++;
-            if (safeAfterRemoval) {
+            console.log(`Line ${i + 1} of text document is safe, added to safeRow count (${safeRowCount})`);
+            if (lineContainsRemoval) {
                 console.log(`Line ${i + 1} of text document is safe, and contains a removal. Index ${j}`);
             }
         }
@@ -44,7 +47,7 @@ for (let i = 0; i < arrLines.length; i++) {
 console.log('Part 2 Answer:', safeRowCount);
 
 function safetyCheck(currentNum, previousNum, direction, previousDirection, debug) {
-    //if (debug) console.log(`Current (or next) num: ${currentNum}, Previous Num: ${previousNum}, Direction: ${direction}, Previous Direction: ${previousDirection}`);
+    if (debug) console.log(`Current (or next) num: ${currentNum}, Previous Num: ${previousNum}, Direction: ${direction}, Previous Direction: ${previousDirection}`);
 
     if (!previousNum) return 1;
     if (currentNum === previousNum) return 0;
