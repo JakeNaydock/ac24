@@ -12,7 +12,7 @@ for (let i = 0; i < arrLines.length; i++) {
         const previousNum = arrCurLine[j - 1];
         if (!previousNum) continue;
         direction = (currentNum < previousNum) ? 'decreasing' : 'increasing';
-        let intSafe = safetyCheck(currentNum, previousNum, direction, previousDirection);
+        const intSafe = safetyCheck(currentNum, previousNum, direction, previousDirection);
         if (!intSafe) {
             unsafeLines.push(arrCurLine);
             break;
@@ -29,7 +29,7 @@ let safeWithRemovalRowCount = 0;
 for (let k = 0; k < unsafeLines.length; k++) {
     let arrUnsafeLine = unsafeLines[k];
     for (let m = 0; m < arrUnsafeLine.length; m++) {
-        let splicedArr = arrUnsafeLine.toSpliced(m, 1);
+        const splicedArr = arrUnsafeLine.toSpliced(m, 1);
         let previousDirection;
         let direction;
         let lineSafe = false;
@@ -38,7 +38,7 @@ for (let k = 0; k < unsafeLines.length; k++) {
             const previousNum = splicedArr[n - 1] * 1;
             if (!previousNum) continue;
             direction = (currentNum < previousNum) ? 'decreasing' : 'increasing';
-            let intSafe = safetyCheck(currentNum, previousNum, direction, previousDirection);
+            const intSafe = safetyCheck(currentNum, previousNum, direction, previousDirection);
             if (!intSafe) break;
             if (n === splicedArr.length - 1) {
                 safeWithRemovalRowCount++;
@@ -50,13 +50,13 @@ for (let k = 0; k < unsafeLines.length; k++) {
     }
 }
 
-let combinedTotal = safeRowCount + safeWithRemovalRowCount;
+const combinedTotal = safeRowCount + safeWithRemovalRowCount;
 console.log('Part 2 answer? ', combinedTotal);
 
 function safetyCheck(currentNum, previousNum, direction, previousDirection) {
     if (!previousNum) return 1;
     if (currentNum === previousNum) return 0;
-    let absDiff = Math.abs(currentNum - previousNum);
+    const absDiff = Math.abs(currentNum - previousNum);
     if (absDiff >= 1 && absDiff <= 3) {
         return (!previousDirection || previousDirection === direction) ? 1 : 0;
     } else {
