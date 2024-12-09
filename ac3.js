@@ -1,39 +1,76 @@
 const fs = require('fs');
-const { type } = require('os');
-const { domainToASCII } = require('url');
-const data = fs.readFileSync('./input3min.txt', 'utf-8');
+const data = fs.readFileSync('./input3.txt', 'utf-8');
 
 const multiply = (num1, num2) => num1 * num2;
 const between = (num, min, max) => num > min && num < max;
-
 
 function findAllMulStrings(str) {
     const regex = /mul\((\d{1,3}),\s?(\d{1,3})\)/g; // Notice the 'g' flag for global matching
     let matches = [];
     let match;
     while ((match = regex.exec(str)) != null) {
-        matches.push([parseInt(match[1]), parseInt(match[2])]); // Convert numbers to integers
+        matches.push({
+            arrNums: [parseInt(match[1]), parseInt(match[2])],
+            index: match.index
+        });
     }
     return matches;
 }
 
 let arrNumbersToMultiply = findAllMulStrings(data);
-
 let sum = 0;
-arrNumbersToMultiply.forEach((el) => sum += multiply(el[0], el[1]));
+arrNumbersToMultiply.forEach((el) => sum += multiply(el.arrNums[0], el.arrNums[1]));
 console.log(`Part 1 total: `, sum);
 
 //Starting part 2 below:
 const doMatchRe = /(do\(\))/g;
 const dontMatchRe = /(don\'t\(\))/g;
+
 let doMatches = Array.from(data.matchAll((doMatchRe)), (m) => m.index);
 let dontMatches = Array.from(data.matchAll(dontMatchRe), (m) => m.index);
-console.log(`Do matches: `, doMatches);
-console.log(`Don't matches `, dontMatches);
 
-console.log(`Between test: `, between(6, 5, 10));
-console.log(`Merge sorted arrays: `, mergeSortedArrays(doMatches, dontMatches));
+const orderedArray = mergeSortedArrays(doMatches, dontMatches);
 
+let zoneMap = [];
+let currentType;
+
+for (let i = 0; i < orderedArray.length; i++) {
+    const currentObj = orderedArray[i];
+    const objType = currentObj.type;
+    if (currentType === objType) continue;
+    if (currentType === undefined) {
+        currentType = objType;
+        zoneMap.push({
+            type: currentObj.type,
+            start: currentObj.index,
+        });
+        continue;
+    }
+
+    zoneMap[zoneMap.length - 1].end = currentObj.index;
+    zoneMap.push({
+        type: currentObj.type,
+        start: currentObj.index,
+    });
+    currentType = objType;
+}
+
+
+let partTwoSum = 0;
+arrNumbersToMultiply.forEach((el) => {
+    let type;
+    for (let i = 0; i < zoneMap.length; i++) {
+        if (between(el.index, zoneMap[i].start, zoneMap[i].end) || !zoneMap[i].end) {
+            type = zoneMap[i].type;
+            break;
+        }
+    }
+    if (type) {
+        partTwoSum += multiply(el.arrNums[0], el.arrNums[1]);
+    }
+});
+
+console.log(`Part 2 answer: `, partTwoSum);
 
 function mergeSortedArrays(arr1, arr2) {
     const mergedArray = [];
@@ -64,7 +101,6 @@ function mergeSortedArrays(arr1, arr2) {
         });
         i++;
     }
-
     // Add any remaining elements from arr2
     while (j < arr2.length) {
         mergedArray.push({
@@ -73,6 +109,5 @@ function mergeSortedArrays(arr1, arr2) {
         });
         j++;
     }
-
     return mergedArray;
 }
