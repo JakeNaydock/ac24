@@ -1,4 +1,4 @@
-const { log } = require('console');
+//const { log } = require('console');
 const fs = require('fs');
 const data = fs.readFileSync('./input4min.txt', 'utf-8');
 
@@ -14,26 +14,40 @@ for (let i = 0; i < arrRows.length; i++) {
 
         const currentChar = rowData[j];
         let xmasIndex = 0;
-        checkCharacters(arrRows, currentChar, xmas, xmasIndex, i, j);
+        checkCharacters(arrRows, currentChar, xmas, xmasIndex, i, j, null);
     }
 }
 
 console.log(`Match count: `, matchCount);
 
 
-function checkCharacters(arrRows, currentChar, xmas, xmasIndex, i, j) {
+function checkCharacters(arrRows, currentChar, xmas, xmasIndex, row, column, indexToCheck) {
 
     console.log(`Current char: `, currentChar);
 
-    if (currentChar != xmas[xmasIndex]) return;
+    if (xmasIndex === 0 && currentChar != xmas[xmasIndex]) return;
     xmasIndex++;
 
     const indexes = [
-        [i - 1, j - 1], [i - 1, j], [i - 1, j + 1],
-        [i, j - 1], [i, j], [i, j + 1],
-        [i + 1, j - 1], [i + 1, j], [i + 1, j + 1]
+        [row - 1, column - 1], [row - 1, column], [row - 1, column + 1],
+        [row, column - 1], [row, column], [row, column + 1],
+        [row + 1, column - 1], [row + 1, column], [row + 1, column + 1]
     ];
     //Loop through all indexes to check the next character
+
+    function checkBounds(arrIndexes, arrRows, row) {
+        let rowIdx = arrIndexes[0];
+        let colIdx = arrIndexes[1];
+
+        if (
+            rowIdx >= 0 && rowIdx < arrRows.length && // Check row bounds
+            colIdx >= 0 && colIdx < arrRows[row].length   // Check column bounds
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     for (let k = 0; k < indexes.length; k++) {
         let rowIdx = indexes[k][0];
@@ -48,6 +62,8 @@ function checkCharacters(arrRows, currentChar, xmas, xmasIndex, i, j) {
             console.log(`Char / xmas letter: `, `${char} / ${xmas[xmasIndex]}`);
             console.log(`Xmas index / xmas length: `, `${xmasIndex} / ${xmas.length}}`);
             if (char != xmas[xmasIndex]) continue;
+            //xmasIndex++;
+
             if (xmasIndex === xmas.length - 1) {
                 matchCount++;
                 console.log(`Match added on rowId ${rowIdx} / colId ${colIdx}`);
