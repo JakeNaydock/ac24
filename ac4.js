@@ -1,4 +1,5 @@
 //const { log } = require('console');
+const { log } = require('console');
 const fs = require('fs');
 const data = fs.readFileSync('./input4min.txt', 'utf-8');
 
@@ -23,10 +24,14 @@ console.log(`Match count: `, matchCount);
 
 function checkCharacters(arrRows, currentChar, xmas, xmasIndex, row, column, indexToCheck) {
 
-    console.log(`Current char: `, currentChar);
+    console.log(`current char / xmas letter: `, `${currentChar} / ${xmas[xmasIndex]}`);
 
-    if (xmasIndex === 0 && currentChar != xmas[xmasIndex]) return;
-    xmasIndex++;
+    const isMatch = char => (char === xmas[xmasIndex]);
+    console.log(`Current char matches? `, isMatch(currentChar));
+
+    if (xmasIndex === 0 && !isMatch(currentChar)) return;
+    if (xmasIndex === 0) xmasIndex++;
+    console.log(`xmas index: `, xmasIndex);
 
     const indexes = [
         [row - 1, column - 1], [row - 1, column], [row - 1, column + 1],
@@ -38,6 +43,7 @@ function checkCharacters(arrRows, currentChar, xmas, xmasIndex, row, column, ind
     function checkBounds(arrIndexes, arrRows, row) {
         let rowIdx = arrIndexes[0];
         let colIdx = arrIndexes[1];
+        console.log(`rowxid: `, rowIdx);
 
         if (
             rowIdx >= 0 && rowIdx < arrRows.length && // Check row bounds
@@ -49,32 +55,48 @@ function checkCharacters(arrRows, currentChar, xmas, xmasIndex, row, column, ind
         }
     }
 
-    for (let k = 0; k < indexes.length; k++) {
-        let rowIdx = indexes[k][0];
-        let colIdx = indexes[k][1];
-        if (
-            rowIdx >= 0 && rowIdx < arrRows.length && // Check row bounds
-            colIdx >= 0 && colIdx < arrRows[i].length   // Check column bounds
-        ) {
+
+
+    //If we already have a specific direction we are checking
+    if (indexToCheck) {
+        console.log(`Check bounds eval in indexToCheck: `, checkBounds(indexToCheck, arrRows, row));
+        if (!checkBounds(indexToCheck, arrRows, row)) return;
+        let char = arrRows[indexToCheck[0]][indexToCheck[1]];
+        console.log(`Char in index to check: `, char);
+
+        if (!isMatch(char)) return;
+
+        if (xmasIndex === xmas.length - 1) {
+            matchCount++;
+            console.log(`Match added from index to check`);
+            return;
+        } else {
+            checkCharacters(arrRows, char, xmas, xmasIndex + 1, row, column, indexToCheck);
+        }
+
+    } else {
+        //Loop through indexes and start checking
+        for (let k = 0; k < indexes.length; k++) {
+
+            if (!checkBounds(indexes[k], arrRows, row)) continue;
             //console.log(arrRows[rowIdx][colIdx]);
-            let char = arrRows[rowIdx][colIdx];
+            let char = arrRows[indexes[k][0]][indexes[k][1]];
             //Stop here if it's not a match on xmas
-            console.log(`Char / xmas letter: `, `${char} / ${xmas[xmasIndex]}`);
+            //console.log(`Char / xmas letter: `, `${char} / ${xmas[xmasIndex]}`);
             console.log(`Xmas index / xmas length: `, `${xmasIndex} / ${xmas.length}}`);
-            if (char != xmas[xmasIndex]) continue;
-            //xmasIndex++;
+            if (!isMatch(char)) continue;
 
             if (xmasIndex === xmas.length - 1) {
                 matchCount++;
-                console.log(`Match added on rowId ${rowIdx} / colId ${colIdx}`);
+                console.log(`Match added from loop`);
             } else {
-                checkCharacters(arrRows, char, xmas, xmasIndex + 1, i, j);
+                checkCharacters(arrRows, char, xmas, xmasIndex + 1, row, column, indexes[k]);
             }
 
-        } else {
-            continue;
         }
     }
+
+
 }
 
 
