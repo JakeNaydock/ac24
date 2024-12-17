@@ -55,8 +55,6 @@ function checkCharacters(arrRows, currentChar, xmas, xmasIndex, row, column, ind
         }
     }
 
-
-
     //If we already have a specific direction we are checking
     if (indexToCheck) {
         console.log(`Check bounds eval in indexToCheck: `, checkBounds(indexToCheck, arrRows, row));
