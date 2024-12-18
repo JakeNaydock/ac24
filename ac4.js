@@ -47,9 +47,10 @@ function checkCharacters(arrRows, currentChar, xmas, xmasIndex, row, column, ind
     //If we already have a specific direction we are checking
     //console.log(`Index to check (before if statement): `, indexToCheck);
     if (indexToCheck) {
+        let direction = indexes[indexToCheck];
         console.log(`Check bounds eval in indexToCheck: `, checkBounds(indexToCheck, arrRows, row));
-        if (!checkBounds(indexToCheck, arrRows, row)) return;
-        let char = arrRows[indexToCheck[0]][indexToCheck[1]];
+        if (!checkBounds(direction, arrRows, row)) return;
+        let char = arrRows[direction[0]][direction[1]];
         console.log(`Char / Xmas letter in index to check / matches?`, `${char} / ${xmas[xmasIndex]} / ${isMatch(char)}`);
 
         //if (!isMatch(char)) return;
@@ -81,7 +82,7 @@ function checkCharacters(arrRows, currentChar, xmas, xmasIndex, row, column, ind
             } else {
              */
             //console.log(`indexes[k]: `, indexes[k]);
-            checkCharacters(arrRows, char, xmas, xmasIndex, indexes[k][0], indexes[k][1], indexes[k]); //THIS NEEDS TO BE PASSED IN AS K
+            checkCharacters(arrRows, char, xmas, xmasIndex, indexes[k][0], indexes[k][1], k/*indexes[k]*/); //THIS NEEDS TO BE PASSED IN AS K
             //}
         }
     }
@@ -92,7 +93,7 @@ function checkBounds(arrIndexes, arrRows, row) {
     let rowIdx = arrIndexes[0];
     let colIdx = arrIndexes[1];
     //console.log(`rowxid: `, rowIdx);
-
+    console.log(`rowIdx / arrRows.length: `, `${rowIdx} / ${arrRows.length}`);
     if (
         rowIdx >= 0 && rowIdx < arrRows.length && // Check row bounds
         colIdx >= 0 && colIdx < arrRows[row].length   // Check column bounds
