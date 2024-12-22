@@ -25,8 +25,8 @@ console.log(`Match count: `, matchCount);
 
 // Function to search for "XMAS" in all 8 directions
 function searchInAllDirections(arrRows, startRow, startCol) {
-    console.log(`Start row / col: `, `${startRow} / ${startCol}`);
-    console.log(`ArrRows`, arrRows);
+    //console.log(`Start row / col: `, `${startRow} / ${startCol}`);
+    //console.log(`ArrRows`, arrRows);
 
     const directionsA = [
         [-1, -1], [1, 1] //Up-left, down-right
@@ -40,16 +40,21 @@ function searchInAllDirections(arrRows, startRow, startCol) {
         const [otherDirRowOffset, otherDirColumnOffset] = directions[1];
         console.log(`Row offset: ${rowOffset} `, `Col offset: ${colOffset}`);
 
-        if (!checkBounds(startRow, startCol, arrRows)) return false;
-        //if (!checkBounds())
 
-        if (arrRows[rowOffset][colOffset] === 'S') {
-            if (arrRows[otherDirRowOffset][otherDirColumnOffset] === 'M') {
+        //if (!checkBounds())
+        if (!checkBounds(startRow + rowOffset, startCol + colOffset, arrRows)) return false;
+        if (!checkBounds(startRow + otherDirRowOffset, startCol + otherDirColumnOffset, arrRows)) return false;
+
+        let char1 = arrRows[startRow + rowOffset][startCol + colOffset];
+        let char2 = arrRows[startRow + otherDirRowOffset][startCol + otherDirColumnOffset];
+
+        if (char1 === 'S') {
+            if (char2 === 'M') {
                 return true;
             }
 
-        } else if (arrRows[rowOffset][colOffset] === 'M') {
-            if (arrRows[otherDirRowOffset][otherDirColumnOffset] === 'S') {
+        } else if (char1 === 'M') {
+            if (char2 === 'S') {
                 return true;
             }
         } else {
