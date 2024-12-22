@@ -32,11 +32,25 @@ function searchInAllDirections(arrRows, xmas, startRow, startCol) {
         [1, -1], [-1, 1] //Down-left, up-right
     ];
 
+    let match1 = false;
+    let match2 = false;
 
     for (let j = 0; j < directionsA.length; j++) {
         const [rowOffset, colOffset] = directionsA[j];
         const otherDirection = (j === 0) ? 1 : 0;
+        const [otherDirRowOffset, otherDirColumnOffset] = directionsA[otherDirection];
 
+        if (arrRows[rowOffset][colOffset] === 'S') {
+            if (arrRows[otherDirRowOffset][otherDirColumnOffset] === 'M') {
+                match1 = true;
+                break;
+            }
+
+        } else if (arrRows[rowOffset][colOffset] === 'M') {
+            if (arrRows[rowOffset][colOffset] === 'S') {
+                break;
+            }
+        }
 
 
     }
