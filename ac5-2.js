@@ -9,7 +9,6 @@ const splitToNumber = (row, delimiter) => {
 const rules = splitData[0].split('\n').map((rule) => splitToNumber(rule, '|'));
 const instructions = splitData[1].split('\n').map((row) => splitToNumber(row, ','));
 
-let sum = 0;
 
 for (let i = 0; i < instructions.length; i++) {
     const instructionLine = instructions[i];
@@ -34,10 +33,6 @@ for (let i = 0; i < instructions.length; i++) {
         }
 
         if (charPassesRules === false) break;
-        if (j === instructionLine.length - 1) {
-            sum += instructionLine[Math.floor(instructionLine.length / 2)];
-        }
     }
 }
 
-console.log(`Total: `, sum);
