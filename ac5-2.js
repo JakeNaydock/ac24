@@ -17,14 +17,21 @@ ruleMap.set(ruleMap.get(47).push(55));
 console.log(`Rulemap get agaiin: `, ruleMap.get(47));
 */
 for (const [rule1, rule2] of rules) {
-    if (ruleMap.has(rule1)) {
+    console.log(`Rulemap has ${rule1}: `, ruleMap.has(rule1));
+    console.log(`Typeof rule 1: `, typeof (rule1));
+    //if (ruleMap.get(rule1) === undefined) continue;
+    if (ruleMap.has(rule1) || ruleMap.get(rule1) != undefined) {
+        console.log(`rowmap get rule1 ${rule1}: `, ruleMap.get(rule1));
         ruleMap.set(ruleMap.get(rule1).push(rule2));
     } else {
         ruleMap.set(rule1, [rule2]);
     }
 }
-console.log(`Rule map: `, ruleMap);
+for (const [key, value] of ruleMap.entries()) {
+    console.log(`${key} = ${value}`);
+}
 
+/*
 for (let i = 0; i < instructions.length; i++) {
     const instructionLine = instructions[i];
 
@@ -52,3 +59,4 @@ for (let i = 0; i < instructions.length; i++) {
     }
 }
 
+*/
